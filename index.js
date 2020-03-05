@@ -12,7 +12,6 @@ let digitCheck          = /\d+/g;
 
 client.login(auth.token);
 client.on ("ready", () => {
-    
     console.log("I am on, hello world!!");
 })
 
@@ -21,7 +20,7 @@ client.on("message", message => {
         let currentMessage = message.content;
         if (!currentMessage.match(digitCheck) || currentMessage < currentCount || currentMessage > currentCount + 1 || message.author == lastUser || currentMessage != currentCount){
             console.log( chalk.red(`Message delete ${currentMessage} , Message author ${message.author.username}`) );
-            statTracker.deleteUpdate(message.author.id);
+            statTracker.deleteUpdate(message.author.id, message.guild.id);
             message.delete();
         }
         else{
@@ -33,7 +32,7 @@ client.on("message", message => {
                 data.lastUser = lastUser;
                 return data;
             });
-            statTracker.correctUpdate(message.author.id);
+            statTracker.correctUpdate(message.author.id, message.guild.id);
         }
     }
 })
@@ -47,6 +46,6 @@ client.on("messageUpdate", message => {
             data.currentNumber = currentCount;
             return data;
         })
-        message.channel.send("The current count has been reverted to: " + currentCount);
+        message.channel.send("The current count has been reverted to, due to a message having an edit: " + currentCount);
     }
 })
