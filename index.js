@@ -21,7 +21,7 @@ client.on("message", message => {
         let currentMessage = message.content;
     if (!currentMessage.match(digitCheck) || currentMessage < currentCount || currentMessage > currentCount + 1 || message.author == lastUser || currentMessage != currentCount){
         console.log( chalk.red(`Message delete ${currentMessage} , Message author ${message.author.username}`) );
-        console.log(statTracker.delete(message.author));
+        console.log(statTracker.delete(message.author.id));
         //message.delete();
     }
         else if (message.content == config.max)

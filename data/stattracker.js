@@ -1,37 +1,33 @@
-const updateJson = require("update-json-file");
-const statsFile  = require("../data/stats.json");
-const fs         = require("fs");
-let stats;
+const fs          = require("fs");
+const chalk       = required("chalk");
+let   statsFile   = require("../data/stats.json"); // read the file into memory
 
-exports.delete = (author) => {
-    let StatsObject = JSON.parse(statsFile);
-    let temp = statsFile.users.author;
-    if (temp.includes(author)) {
-        console.log(temo.includes(author));
-        console.log(temp.indexOf(author));
-        index = temp.indexOf(author);
-    }
-    else
-        index = -1;
+exports.deleteUpdate = async (author) => {
+    let index = await findUser(author);
+    (index != -1) ? statsFile.users[index].delete = statsFile.users[index].delete + 1: await createUser(author, 0); 
+}
 
-    if (index != -1)
-        statsFile.users[findUser(author)].delete = statsFile.users[findUser(author)].delete + 1;
-    else 
-        createUser(author);
-        
+exports.correctUpdate = async (author) => {
+    let index = await findUser(author);
+    (index!= -1) ? statsFile.users[index].correct = statsFile.users[index].correct + 1: await createUser(author, 1);
+    updateUser();
 }
 
 async function findUser (author) {
-    let temp = statsFile.users.author;
-
-
+    let users = statsFile.users;
+    for (let i = 0; i < users.length; i ++)
+        if (users[i].author == author) return i;
+    return -1;
 }
 
-async function createUser (author) {
-    statsFile['users'].push({"author":author, "delete" : "1"});
+async function createUser (author, choice) {
+    if (choice == 0) statsFile['users'].push({ "author": author, "delete": 1, "correct": 0 });
+    else if (choice == 1) statsFile['users'].push({ "author": author, "delete": 0, "correct": 1 });
+    console.log(chalk.green(`User was created: ${author}`))
 }
 
-// read the file into memory
-async function readFile (){
-    console.log(statsFile);
+async function updateUser () {
+    //let Json = JSON.parse(statsFile);
+    let data = JSON.stringify(statsFile);
+    fs.writeFileSync("./data/stats.json", data);
 }
