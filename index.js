@@ -19,13 +19,11 @@ client.on ("ready", () => {
 client.on("message", message => {
     if (message.channel.id == "684838856922628149"){
         let currentMessage = message.content;
-    if (!currentMessage.match(digitCheck) || currentMessage < currentCount || currentMessage > currentCount + 1 || message.author == lastUser || currentMessage != currentCount){
-        console.log( chalk.red(`Message delete ${currentMessage} , Message author ${message.author.username}`) );
-        console.log(statTracker.delete(message.author.id));
-        //message.delete();
-    }
-        else if (message.content == config.max)
-            return message.channel.send ("Congrets we hit the max! \n Counting will we revert back to zero");
+        if (!currentMessage.match(digitCheck) || currentMessage < currentCount || currentMessage > currentCount + 1 || message.author == lastUser || currentMessage != currentCount){
+            console.log( chalk.red(`Message delete ${currentMessage} , Message author ${message.author.username}`) );
+            statTracker.deleteUpdate(message.author.id);
+            message.delete();
+        }
         else{
             currentCount++;
             lastUser = message.author;
@@ -35,8 +33,20 @@ client.on("message", message => {
                 data.lastUser = lastUser;
                 return data;
             });
-            
+            statTracker.correctUpdate(message.author.id);
         }
-            
+    }
+})
+
+// Check to see if there is a message edited, if so move the counter down one and remove the message. 
+client.on("messageUpdate", message => {
+    if (message.channel.id == "684838856922628149"){
+        message.delete();
+        currentCount--;
+        updateJsonFile("./config/config.json", (data) => {
+            data.currentNumber = currentCount;
+            return data;
+        })
+        message.channel.send("The current count has been reverted to: " + currentCount);
     }
 })

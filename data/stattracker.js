@@ -1,5 +1,5 @@
 const fs          = require("fs");
-const chalk       = required("chalk");
+const chalk       = require("chalk");
 let   statsFile   = require("../data/stats.json"); // read the file into memory
 
 exports.deleteUpdate = async (author) => {
@@ -27,7 +27,6 @@ async function createUser (author, choice) {
 }
 
 async function updateUser () {
-    //let Json = JSON.parse(statsFile);
     let data = JSON.stringify(statsFile);
     fs.writeFileSync("./data/stats.json", data);
 }
