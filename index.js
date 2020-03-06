@@ -10,6 +10,8 @@ let currentCount        = config.currentNumber;
 let lastUser            = config.lastUser;
 let digitCheck          = /\d+/g;
 
+var channels = require("./data/channel.json");
+
 client.login(auth.token);
 client.on ("ready", () => {
     console.log("I am on, hello world!!");
@@ -18,7 +20,20 @@ client.on ("ready", () => {
 client.on("message", message => {
     if (message.author.bot)
         return;
-    if (message.channel.id == "685213596136767542"){
+
+    // A user (with perms) can use the !count command to register the channel as being a channel for counting.
+    if (message.content == "!count") {
+        if (message.member.hasPermission("MANAGE_CHANNELS") && !channels.includes(message.channel.id)) {
+            channels.push(message.channel.id);
+            updateJsonFile("./data/channel.json", (data) => { 
+                data = channels; 
+                return data; 
+            });
+            message.delete();
+        }
+    }
+
+    if (channels.includes(message.channel.id)) {
         let currentMessage = message.content;
         if (!currentMessage.match(digitCheck) || currentMessage < currentCount || currentMessage > currentCount + 1 || message.author == lastUser || currentMessage != currentCount || currentMessage.includes(".")){
             console.log( chalk.red(`Message delete ${currentMessage} , Message author ${message.author.username}`) );
@@ -41,7 +56,7 @@ client.on("message", message => {
 
 // Check to see if there is a message edited, if so move the counter down one and remove the message. 
 client.on("messageUpdate", message => {
-    if (message.channel.id == "685213596136767542"){
+    if (channels.includes(message.channel.id)) {
         message.delete();
         statTracker.editUpdate(message.author.id);
         currentCount--;
