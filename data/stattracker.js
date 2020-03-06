@@ -3,6 +3,12 @@ const chalk = require("chalk");
 let statsFile = require("../data/stats.json"); // read the file into memory
 let serverIndex;
 
+/**
+ * @param {author} snowflake
+ * @param {server} snowflake
+ * @purpose        Update the deletecounter for said user, if the user does not exit then creat then.
+ *
+ */
 exports.deleteUpdate = async (author, server) => {
     let index = await findUser(author, server);
     let userObj = statsFile.servers[serverIndex];
@@ -11,6 +17,12 @@ exports.deleteUpdate = async (author, server) => {
     updateFile();
 }
 
+/**
+ * @param {author} snowflake
+ * @param {server} snowflake
+ * @purpose        Update the correctCounter for said user, if the user does not exit then creat then.
+ *
+ */
 exports.correctUpdate = async (author, server) => {
     let index = await findUser(author, server);
     let userObj = statsFile.servers[serverIndex];
@@ -18,7 +30,11 @@ exports.correctUpdate = async (author, server) => {
     (index != -1) ? userObj.users[index].correct = userObj.users[index].correct + 1 : await createUser(author, 1, server);
     updateFile();
 }
-
+/**
+ * @param {server} snowflake
+ * @param {server} snowflake
+ * @purpose        Bind the count channel to bot.
+ */
 exports.updateCountChannel = async (server, channel) => {
     let tempObj = await findServer(server);
     let serverObj = statsFile.servers[tempObj];
@@ -36,14 +52,12 @@ exports.updateCountAndUser = async (server, count, user) => {
     updateFile();
 }
 
+// Error is thrown here but it still works?
 exports.getPrefix = async (server) => {
-    console.log(`Server: ${server}`);
     let tempObj = await findServer(server);
-    console.log(tempObj);
     let serverObj = statsFile.servers[tempObj];
-    console.log(serverObj);
+    console.log(JSON.stringify(serverObj));
     serverObj = serverObj[server];
-    console.log("serverobj " + serverObj);
     return serverObj.config.prefix;
 }
 
@@ -67,16 +81,11 @@ exports.getAllChannels = async () => {
 // Currently does not search correctly, it just pulls the first server index even if it is not equal.
 async function findServer(server) {
     let servers = statsFile.servers;
-    console.log(servers);
-    for (let i = 0; i < servers.length; i++) {
-        if (servers[i] == server) console.log("hi");
-        if ((Object.keys(servers[i]).includes(server))) {
-            serverIndex = Object.keys(servers[i]).indexOf(server);
-            console.log(`Server index ${serverIndex}`);
-            console.log(`ServerIndexObjectKey ${Object.keys(servers[i]).indexOf(server)}`);
+    for (let i = 0; i < servers.length; i++)
+        if (Object.keys(servers[i]).includes(server)){
+            serverIndex = i;
             return serverIndex;
-        }
-    }
+        } 
     return -1;
 }
 
