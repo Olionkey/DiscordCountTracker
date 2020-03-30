@@ -2,7 +2,6 @@ const Discord           = require("discord.js");
 const client            = new Discord.Client();
 const auth              = require("./config/auth.json");
 const statTracker       = require("./data/stattracker.js");
-const test              = require("./commands/test");
 const fs                = require("fs");
 const commandFiles      = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const chalk             = require("chalk");
