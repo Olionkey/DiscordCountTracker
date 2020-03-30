@@ -11,7 +11,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "child": "0.0.3",
-    "discord.js": "^12.0.1",
+    "discord.js": "^12.1.1",
     "process": "^0.11.10",
     "update-json-file": "^1.1.1"
   }

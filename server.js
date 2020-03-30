@@ -21,8 +21,8 @@ function workerProcessSpawn() {
     workerProcess.on('close', function (code) {
         console.log('Bot process exited with code ' + code);
         console.log(chalk.grey("Bot offline, changing status"));
-        client.user.setStatus('dnd');
-        client.user.setActivity("Looks like I crashed...")
+        //client.user.setStatus('dnd');
+       // client.user.setActivity("Looks like I crashed...")
     });
     return workerProcess
 };

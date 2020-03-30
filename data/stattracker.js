@@ -112,13 +112,6 @@ exports.setContinuous = async (server, bool) => {
     return serverObj.config.allowContinuous;
 }
 
-exports.testFunction = async (server) => {
-    let tempObj = await findServer(server);
-    let serverObj = statsFile.servers[tempObj];
-    console.log(serverObj.users);
-}
-
-
 // Currently does not search correctly, it just pulls the first server index even if it is not equal.
 async function findServer(server) {
     let servers = statsFile.servers;
